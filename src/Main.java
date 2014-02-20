@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -10,7 +11,7 @@ public class Main {
         try {
             BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
 
-            int[] image = convertToTable(bufferedImage);;
+            int[] image = convertToTable(bufferedImage);
             Color[] colorImage = new Color[image.length];
 
             for (int i = 0; i < colorImage.length; i++) {
@@ -18,8 +19,29 @@ public class Main {
                 colorImage[i] = color;
             }
 
-            ColorHistogram histogram = new ColorHistogram(4, colorImage);
-            System.out.println(histogram.toString());
+            int divisions = 8;
+
+            ColorHistogram histogram = new ColorHistogram(divisions, colorImage);
+
+            int[] max = histogram.getMainDivision();
+
+            System.out.println("main division : [" + max[0] + "][" + max[1] + "][" + max[2] + "]");
+
+            int mainColorRed = (int)(255/(float)divisions * max[0]);
+            int mainColorGreen = (int)(255/(float)divisions * max[1]);
+            int mainColorBlue = (int)(255/(float)divisions * max[2]);
+
+
+            System.out.println("lowest color in main division : [" + mainColorRed + "][" + mainColorGreen + "][" + mainColorBlue + "]");
+
+            JFrame frame = new JFrame();
+
+            frame.setSize(500,500);
+            frame.getContentPane().setBackground(new Color(mainColorRed, mainColorGreen, mainColorBlue));
+
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.show();
+
         } catch (IOException e) {
         }
     }
@@ -31,7 +53,7 @@ public class Main {
         final int height = image.getHeight();
         final boolean hasAlphaChannel = image.getAlphaRaster() != null;
 
-        int[] result = new int[height*width];
+        int[] result = new int[height * width];
         if (hasAlphaChannel) {
             final int pixelLength = 4;
             for (int pixel = 0; pixel < pixels.length; pixel += pixelLength) {
@@ -40,7 +62,7 @@ public class Main {
                 argb += ((int) pixels[pixel + 1] & 0xff); // blue
                 argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
                 argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
-                result[pixel/pixelLength] = argb;
+                result[pixel / pixelLength] = argb;
             }
         } else {
             final int pixelLength = 3;
@@ -50,7 +72,7 @@ public class Main {
                 argb += ((int) pixels[pixel] & 0xff); // blue
                 argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
                 argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-                result[pixel/pixelLength] = argb;
+                result[pixel / pixelLength] = argb;
             }
         }
 
