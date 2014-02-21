@@ -1,4 +1,7 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ColorHistogram {
     private int[][][] mHistogram;
@@ -33,7 +36,6 @@ public class ColorHistogram {
                         result.count = mHistogram[i][j][k];
                     }
                 }
-
         System.out.println(" max [" + result.red + "][" + result.green + "][" + result.blue + "]");
         return result;
 
@@ -50,11 +52,45 @@ public class ColorHistogram {
         return s;
     }
 
+    public ArrayList<ColorBox> getAllDivisionsInOrder() {
+        ArrayList<ColorBox> result = new ArrayList<ColorBox>();
+        int l = 0;
+
+        for (int i = 0; i < mDivisionsNumber; i++)
+            for (int j = 0; j < mDivisionsNumber; j++)
+                for (int k = 0; k < mDivisionsNumber; k++) {
+                    result.add(new ColorBox(i,j,k, mHistogram[i][j][k]));
+                }
+
+        Collections.sort(result, new ColorBoxComparator());
+
+        return result;
+    }
+
     public class ColorBox {
+
+        public ColorBox() {
+
+        }
+
+        public ColorBox(int r, int g, int b, int count) {
+            red = r;
+            green = g;
+            blue = b;
+            this.count = count;
+        }
+
         public int red = 0;
         public int green = 0;
         public int blue = 0;
 
         public int count = 0;
+    }
+
+    private class ColorBoxComparator implements Comparator<ColorBox> {
+        @Override
+        public int compare(ColorBox a, ColorBox b) {
+            return ((Integer)a.count).compareTo(b.count);
+        }
     }
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +24,9 @@ public class Main {
 
             ColorHistogram histogram = new ColorHistogram(divisions, colorImage);
 
-            ColorHistogram.ColorBox max = histogram.getMainDivision();
+            ArrayList<ColorHistogram.ColorBox> result = histogram.getAllDivisionsInOrder();
+
+            ColorHistogram.ColorBox max = result.get(result.size() - 1);
 
             System.out.println("main division : [" + max.red + "][" + max.green + "][" + max.blue + "]");
 
@@ -36,7 +39,7 @@ public class Main {
 
             JFrame frame = new JFrame();
 
-            frame.setSize(500,500);
+            frame.setSize(500, 500);
             frame.getContentPane().setBackground(new Color(mainColorRed, mainColorGreen, mainColorBlue));
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
