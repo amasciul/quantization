@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File("strawberry.jpg"));
 
             int[] image = convertToTable(bufferedImage);
             Color[] colorImage = new Color[image.length];
@@ -23,13 +23,13 @@ public class Main {
 
             ColorHistogram histogram = new ColorHistogram(divisions, colorImage);
 
-            int[] max = histogram.getMainDivision();
+            ColorHistogram.ColorBox max = histogram.getMainDivision();
 
-            System.out.println("main division : [" + max[0] + "][" + max[1] + "][" + max[2] + "]");
+            System.out.println("main division : [" + max.red + "][" + max.green + "][" + max.blue + "]");
 
-            int mainColorRed = (int)(255/(float)divisions * max[0]);
-            int mainColorGreen = (int)(255/(float)divisions * max[1]);
-            int mainColorBlue = (int)(255/(float)divisions * max[2]);
+            int mainColorRed = (int)(255/(float)divisions * max.red);
+            int mainColorGreen = (int)(255/(float)divisions * max.green);
+            int mainColorBlue = (int)(255/(float)divisions * max.blue);
 
 
             System.out.println("lowest color in main division : [" + mainColorRed + "][" + mainColorGreen + "][" + mainColorBlue + "]");
