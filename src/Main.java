@@ -26,6 +26,14 @@ public class Main {
 
             ArrayList<ColorHistogram.ColorBox> result = histogram.getAllDivisionsInOrder();
 
+            for (int i = 0; i < 10; i++) {
+                ColorHistogram.ColorBox color = result.get(result.size() - 1 - i);
+                int red = (int)(255/(float)divisions * color.red);
+                int green = (int)(255/(float)divisions * color.green);
+                int blue = (int)(255/(float)divisions * color.blue);
+                System.out.println("color " + i + " : " + red + " " + green + " " + blue);
+            }
+
             ColorHistogram.ColorBox max = result.get(result.size() - 1);
 
             System.out.println("main division : [" + max.red + "][" + max.green + "][" + max.blue + "]");
