@@ -64,7 +64,32 @@ public class ColorHistogram {
         for (int i = 0; i < mDivisionsNumber; i++)
             for (int j = 0; j < mDivisionsNumber; j++)
                 for (int k = 0; k < mDivisionsNumber; k++) {
-                    result.add(new ColorBox(i,j,k, mHistogram[i][j][k].size()));
+                    if (mHistogram[i][j][k].size() == 0) break;
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                        @Override
+                        public int compare(Color a, Color b) {
+                            return ((Integer)a.getRed()).compareTo(b.getRed());
+                        }
+                    });
+                    int redMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getRed();
+
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                        @Override
+                        public int compare(Color a, Color b) {
+                            return ((Integer)a.getGreen()).compareTo(b.getGreen());
+                        }
+                    });
+                    int greenMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getGreen();
+
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                        @Override
+                        public int compare(Color a, Color b) {
+                            return ((Integer)a.getBlue()).compareTo(b.getBlue());
+                        }
+                    });
+                    int blueMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getBlue();
+
+                    result.add(new ColorBox(redMedian,greenMedian,blueMedian, mHistogram[i][j][k].size()));
                 }
 
         Collections.sort(result, new ColorBoxComparator());

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("strawberry.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File("mojito.jpg"));
 
             int[] image = convertToTable(bufferedImage);
             Color[] colorImage = new Color[image.length];
@@ -20,7 +20,7 @@ public class Main {
                 colorImage[i] = color;
             }
 
-            int divisions = 8;
+            int divisions = 4;
 
             ColorHistogram histogram = new ColorHistogram(divisions, colorImage);
 
@@ -28,27 +28,17 @@ public class Main {
 
             for (int i = 0; i < 10; i++) {
                 ColorHistogram.ColorBox color = result.get(result.size() - 1 - i);
-                int red = (int)(255/(float)divisions * color.red);
-                int green = (int)(255/(float)divisions * color.green);
-                int blue = (int)(255/(float)divisions * color.blue);
-                System.out.println("color " + i + " : " + red + " " + green + " " + blue);
+                System.out.println("color " + i + " : " + color.red + " " + color.green + " " + color.blue);
             }
 
             ColorHistogram.ColorBox max = result.get(result.size() - 1);
 
-            System.out.println("main division : [" + max.red + "][" + max.green + "][" + max.blue + "]");
-
-            int mainColorRed = (int)(255/(float)divisions * max.red);
-            int mainColorGreen = (int)(255/(float)divisions * max.green);
-            int mainColorBlue = (int)(255/(float)divisions * max.blue);
-
-
-            System.out.println("lowest color in main division : [" + mainColorRed + "][" + mainColorGreen + "][" + mainColorBlue + "]");
+            System.out.println("main color : [" + max.red + "][" + max.green + "][" + max.blue + "]");
 
             JFrame frame = new JFrame();
 
             frame.setSize(500, 500);
-            frame.getContentPane().setBackground(new Color(mainColorRed, mainColorGreen, mainColorBlue));
+            frame.getContentPane().setBackground(new Color(max.red, max.green, max.blue));
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.show();
