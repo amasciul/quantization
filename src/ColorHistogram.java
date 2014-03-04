@@ -21,15 +21,9 @@ public class ColorHistogram {
                 }
 
         int[] imagePixels = convertToTable(image);
-        Color[] imageColors = new Color[imagePixels.length];
 
-        for (int i = 0; i < imageColors.length; i++) {
-            Color color = new Color(imagePixels[i]);
-            imageColors[i] = color;
-        }
-
-        for (Color color : imageColors) {
-            addPixel(color);
+        for (int i = 0; i < imagePixels.length; i++) {
+            addPixel(imagePixels[i]);
         }
     }
 
@@ -37,9 +31,10 @@ public class ColorHistogram {
         this(image, DEFAULT_DIVISONS_NUMBER);
     }
 
-    private void addPixel(Color color) {
+    private void addPixel(int color) {
+        Color colorObject = new Color(color);
         int divisionLength = 256 / mDivisionsNumber;
-        mHistogram[color.getRed() / divisionLength][color.getGreen() / divisionLength][color.getBlue() / divisionLength].add(color);
+        mHistogram[colorObject.getRed() / divisionLength][colorObject.getGreen() / divisionLength][colorObject.getBlue() / divisionLength].add(colorObject);
     }
 
     public String toString() {
