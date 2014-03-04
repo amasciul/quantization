@@ -21,16 +21,18 @@ public class Main {
                 System.out.println("color " + i + " : " + color.getRed() + " " + color.getGreen() + " " + color.getBlue());
             }
 
-            Color max = result.get(2);
+            for (int i = 0; i < 4; i++) {
+                Color max = result.get(i);
 
-            JFrame frame = new JFrame();
-            frame.setTitle(histogram.getDivisionNumber() + " divisions");
+                JFrame frame = new JFrame();
+                frame.setTitle("color " + i + ", " + histogram.getDivisionNumber() + " divisions");
 
-            frame.setSize(500, 500);
-            frame.getContentPane().setBackground(new Color(max.getRed(), max.getGreen(), max.getBlue()));
+                frame.setSize(500, 500);
+                frame.getContentPane().setBackground(new Color(max.getRed(), max.getGreen(), max.getBlue()));
 
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.show();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.show();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
