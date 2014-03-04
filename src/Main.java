@@ -12,25 +12,26 @@ public class Main {
         try {
             BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
 
-            int divisions = 4;
+            int divisions = 2;
 
             ColorHistogram histogram = new ColorHistogram(bufferedImage, divisions);
 
-            ArrayList<ColorHistogram.ColorBox> result = histogram.getAllDivisionsInOrder();
+            ArrayList<Color> result = histogram.getAllDivisionsInOrder();
 
-            for (int i = 0; i < 10; i++) {
-                ColorHistogram.ColorBox color = result.get(result.size() - 1 - i);
-                System.out.println("color " + i + " : " + color.red + " " + color.green + " " + color.blue);
+            for (int i = 0; i < 4; i++) {
+                Color color = result.get(result.size() - 1 - i);
+                System.out.println("color " + i + " : " + color.getRed() + " " + color.getGreen() + " " + color.getBlue());
             }
 
-            ColorHistogram.ColorBox max = result.get(result.size() - 1);
+            Color max = result.get(result.size() - 1);
 
-            System.out.println("main color : [" + max.red + "][" + max.green + "][" + max.blue + "]");
+            System.out.println("main color : [" + max + "]");
 
             JFrame frame = new JFrame();
+            frame.setTitle(divisions + " divisions");
 
             frame.setSize(500, 500);
-            frame.getContentPane().setBackground(new Color(max.red, max.green, max.blue));
+            frame.getContentPane().setBackground(new Color(max.getRed(), max.getGreen(), max.getBlue()));
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.show();

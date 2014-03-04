@@ -36,27 +36,6 @@ public class ColorHistogram {
         mHistogram[color.getRed() / divisionLength][color.getGreen() / divisionLength][color.getBlue() / divisionLength].add(color);
     }
 
-    ColorBox getMainDivision() {
-        ColorBox result = new ColorBox();
-
-        for (int i = 0; i < mDivisionsNumber; i++)
-            for (int j = 0; j < mDivisionsNumber; j++)
-                for (int k = 0; k < mDivisionsNumber; k++) {
-                    System.out.println("[" + i + "][" + j + "][" + k + "] = " + mHistogram[i][j][k]);
-                    if (mHistogram[i][j][k].size() >= mHistogram[result.red][result.green][result.blue].size()) {
-                        System.out.println(mHistogram[i][j][k] +" >= " + mHistogram[result.red][result.green][result.blue]);
-                        System.out.println("found new max " + mHistogram[i][j][k]);
-                        result.red = i;
-                        result.green = j;
-                        result.blue = k;
-                        result.count = mHistogram[i][j][k].size();
-                    }
-                }
-        System.out.println(" max [" + result.red + "][" + result.green + "][" + result.blue + "]");
-        return result;
-
-    }
-
     public String toString() {
         String s = "";
         for (int i = 0; i < mDivisionsNumber; i++)
@@ -68,30 +47,31 @@ public class ColorHistogram {
         return s;
     }
 
-    public ArrayList<ColorBox> getAllDivisionsInOrder() {
-        ArrayList<ColorBox> result = new ArrayList<ColorBox>();
-        int l = 0;
+    public ArrayList<Color> getAllDivisionsInOrder() {
+        ArrayList<ColorBox> boxResult = new ArrayList<ColorBox>();
+        ArrayList<Color> result = new ArrayList<Color>();
 
         for (int i = 0; i < mDivisionsNumber; i++)
             for (int j = 0; j < mDivisionsNumber; j++)
                 for (int k = 0; k < mDivisionsNumber; k++) {
                     if (mHistogram[i][j][k].size() == 0) break;
+
                     Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
                         @Override
                         public int compare(Color a, Color b) {
                             return ((Integer)a.getRed()).compareTo(b.getRed());
                         }
                     });
-                    int redMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getRed();
 
+                    int redMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getRed();
                     Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
                         @Override
                         public int compare(Color a, Color b) {
                             return ((Integer)a.getGreen()).compareTo(b.getGreen());
                         }
                     });
-                    int greenMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getGreen();
 
+                    int greenMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getGreen();
                     Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
                         @Override
                         public int compare(Color a, Color b) {
@@ -100,19 +80,19 @@ public class ColorHistogram {
                     });
                     int blueMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getBlue();
 
-                    result.add(new ColorBox(redMedian,greenMedian,blueMedian, mHistogram[i][j][k].size()));
+                    boxResult.add(new ColorBox(redMedian, greenMedian, blueMedian, mHistogram[i][j][k].size()));
                 }
 
-        Collections.sort(result, new ColorBoxComparator());
+        Collections.sort(boxResult, new ColorBoxComparator());
+
+        for (ColorBox colorBox : boxResult) {
+            result.add(new Color(colorBox.red, colorBox.green, colorBox.blue));
+        }
 
         return result;
     }
 
     public class ColorBox {
-
-        public ColorBox() {
-
-        }
 
         public ColorBox(int r, int g, int b, int count) {
             red = r;
