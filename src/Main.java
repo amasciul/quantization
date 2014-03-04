@@ -12,23 +12,19 @@ public class Main {
         try {
             BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
 
-            int divisions = 2;
-
-            ColorHistogram histogram = new ColorHistogram(bufferedImage, divisions);
+            ColorHistogram histogram = new ColorHistogram(bufferedImage);
 
             ArrayList<Color> result = histogram.getAllDivisionsInOrder();
 
-            for (int i = 0; i < 4; i++) {
-                Color color = result.get(result.size() - 1 - i);
+            for (int i = 0; i < 10 && i < result.size(); i++) {
+                Color color = result.get(i);
                 System.out.println("color " + i + " : " + color.getRed() + " " + color.getGreen() + " " + color.getBlue());
             }
 
-            Color max = result.get(result.size() - 1);
-
-            System.out.println("main color : [" + max + "]");
+            Color max = result.get(2);
 
             JFrame frame = new JFrame();
-            frame.setTitle(divisions + " divisions");
+            frame.setTitle(histogram.getDivisionNumber() + " divisions");
 
             frame.setSize(500, 500);
             frame.getContentPane().setBackground(new Color(max.getRed(), max.getGreen(), max.getBlue()));

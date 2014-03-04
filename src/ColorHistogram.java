@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ColorHistogram {
+    private static final int DEFAULT_DIVISONS_NUMBER = 4;
+
     private ArrayList<Color>[][][] mHistogram;
     private int mDivisionsNumber;
 
@@ -29,6 +31,10 @@ public class ColorHistogram {
         for (Color color : imageColors) {
             addPixel(color);
         }
+    }
+
+    public ColorHistogram(BufferedImage image) {
+        this(image, DEFAULT_DIVISONS_NUMBER);
     }
 
     private void addPixel(Color color) {
@@ -83,13 +89,17 @@ public class ColorHistogram {
                     boxResult.add(new ColorBox(redMedian, greenMedian, blueMedian, mHistogram[i][j][k].size()));
                 }
 
-        Collections.sort(boxResult, new ColorBoxComparator());
+        Collections.sort(boxResult, new ColorBoxReverseComparator());
 
         for (ColorBox colorBox : boxResult) {
             result.add(new Color(colorBox.red, colorBox.green, colorBox.blue));
         }
 
         return result;
+    }
+
+    public int getDivisionNumber() {
+        return mDivisionsNumber;
     }
 
     public class ColorBox {
@@ -108,10 +118,10 @@ public class ColorHistogram {
         public int count = 0;
     }
 
-    private class ColorBoxComparator implements Comparator<ColorBox> {
+    private class ColorBoxReverseComparator implements Comparator<ColorBox> {
         @Override
         public int compare(ColorBox a, ColorBox b) {
-            return ((Integer)a.count).compareTo(b.count);
+            return ((Integer)b.count).compareTo(a.count);
         }
     }
 
