@@ -10,19 +10,11 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("mojito.jpg"));
-
-            int[] image = convertToTable(bufferedImage);
-            Color[] colorImage = new Color[image.length];
-
-            for (int i = 0; i < colorImage.length; i++) {
-                Color color = new Color(image[i]);
-                colorImage[i] = color;
-            }
+            BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
 
             int divisions = 4;
 
-            ColorHistogram histogram = new ColorHistogram(divisions, colorImage);
+            ColorHistogram histogram = new ColorHistogram(bufferedImage, divisions);
 
             ArrayList<ColorHistogram.ColorBox> result = histogram.getAllDivisionsInOrder();
 
@@ -44,39 +36,7 @@ public class Main {
             frame.show();
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-
-    private static int[] convertToTable(BufferedImage image) {
-
-        final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
-
-        int[] result = new int[height * width];
-        if (hasAlphaChannel) {
-            final int pixelLength = 4;
-            for (int pixel = 0; pixel < pixels.length; pixel += pixelLength) {
-                int argb = 0;
-                argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
-                argb += ((int) pixels[pixel + 1] & 0xff); // blue
-                argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
-                argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
-                result[pixel / pixelLength] = argb;
-            }
-        } else {
-            final int pixelLength = 3;
-            for (int pixel = 0; pixel < pixels.length; pixel += pixelLength) {
-                int argb = 0;
-                argb += -16777216; // 255 alpha
-                argb += ((int) pixels[pixel] & 0xff); // blue
-                argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
-                argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-                result[pixel / pixelLength] = argb;
-            }
-        }
-
-        return result;
     }
 }

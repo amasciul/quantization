@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,7 +9,7 @@ public class ColorHistogram {
     private ArrayList<Color>[][][] mHistogram;
     private int mDivisionsNumber;
 
-    public ColorHistogram(int divisions, Color... colors) {
+    public ColorHistogram(BufferedImage image, int divisions) {
         mDivisionsNumber = divisions;
         mHistogram = new ArrayList[divisions][divisions][divisions];
         for (int i = 0; i < divisions; i++)
@@ -15,7 +17,16 @@ public class ColorHistogram {
                 for (int k = 0; k < divisions; k++) {
                     mHistogram[i][j][k] = new ArrayList<Color>();
                 }
-        for (Color color : colors) {
+
+        int[] imagePixels = convertToTable(image);
+        Color[] imageColors = new Color[imagePixels.length];
+
+        for (int i = 0; i < imageColors.length; i++) {
+            Color color = new Color(imagePixels[i]);
+            imageColors[i] = color;
+        }
+
+        for (Color color : imageColors) {
             addPixel(color);
         }
     }
@@ -122,5 +133,38 @@ public class ColorHistogram {
         public int compare(ColorBox a, ColorBox b) {
             return ((Integer)a.count).compareTo(b.count);
         }
+    }
+
+    private int[] convertToTable(BufferedImage image) {
+
+        final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
+
+        int[] result = new int[height * width];
+        if (hasAlphaChannel) {
+            final int pixelLength = 4;
+            for (int pixel = 0; pixel < pixels.length; pixel += pixelLength) {
+                int argb = 0;
+                argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
+                argb += ((int) pixels[pixel + 1] & 0xff); // blue
+                argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
+                argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
+                result[pixel / pixelLength] = argb;
+            }
+        } else {
+            final int pixelLength = 3;
+            for (int pixel = 0; pixel < pixels.length; pixel += pixelLength) {
+                int argb = 0;
+                argb += -16777216; // 255 alpha
+                argb += ((int) pixels[pixel] & 0xff); // blue
+                argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
+                argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
+                result[pixel / pixelLength] = argb;
+            }
+        }
+
+        return result;
     }
 }
