@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ColorHistogram {
-    private static final int DEFAULT_DIVISONS_NUMBER = 4;
+    private static final int DEFAULT_DIVISONS_NUMBER = 2;
 
     private ArrayList<Color>[][][] mHistogram;
     private int mDivisionsNumber;
