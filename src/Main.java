@@ -2,7 +2,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,11 +9,11 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File("strawberry.jpg"));
 
-            ColorHistogram histogram = new ColorHistogram(bufferedImage);
+            ColorQuantizer quantizer = new ColorQuantizer().load(bufferedImage).quantize();
 
-            ArrayList<Color> result = histogram.getAllDivisionsInOrder();
+            ArrayList<Color> result = quantizer.getQuantizedColors();
 
             for (int i = 0; i < 10 && i < result.size(); i++) {
                 Color color = result.get(i);
@@ -25,7 +24,7 @@ public class Main {
                 Color max = result.get(i);
 
                 JFrame frame = new JFrame();
-                frame.setTitle("color " + i + ", " + histogram.getDivisionNumber() + " divisions");
+                frame.setTitle("color " + i + ", " + quantizer.getDivisionNumber() + " divisions");
 
                 frame.setSize(500, 500);
                 frame.getContentPane().setBackground(new Color(max.getRed(), max.getGreen(), max.getBlue()));

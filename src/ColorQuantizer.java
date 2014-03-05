@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class ColorHistogram {
-    private static final int DEFAULT_DIVISONS_NUMBER = 2;
+public class ColorQuantizer {
+    public static final int DEFAULT_DIVISIONS_NUMBER = 2;
 
     private ArrayList<Integer>[][][] mHistogram;
     private int mDivisionsNumber;
+    private ArrayList<Color> mQuantizedColors;
 
-    public ColorHistogram(BufferedImage image, int divisions) {
+    public ColorQuantizer(int divisions) {
         mDivisionsNumber = divisions;
         mHistogram = new ArrayList[divisions][divisions][divisions];
         for (int i = 0; i < divisions; i++)
@@ -19,16 +20,19 @@ public class ColorHistogram {
                 for (int k = 0; k < divisions; k++) {
                     mHistogram[i][j][k] = new ArrayList<Integer>();
                 }
+    }
 
+    public ColorQuantizer() {
+        this(DEFAULT_DIVISIONS_NUMBER);
+    }
+
+    public ColorQuantizer load(BufferedImage image) {
         int[] imagePixels = convertToTable(image);
 
         for (int i = 0; i < imagePixels.length; i++) {
             addPixel(imagePixels[i]);
         }
-    }
-
-    public ColorHistogram(BufferedImage image) {
-        this(image, DEFAULT_DIVISONS_NUMBER);
+        return this;
     }
 
     private void addPixel(int color) {
@@ -48,9 +52,9 @@ public class ColorHistogram {
         return s;
     }
 
-    public ArrayList<Color> getAllDivisionsInOrder() {
+    public ColorQuantizer quantize() {
         ArrayList<ColorBox> boxResult = new ArrayList<ColorBox>();
-        ArrayList<Color> result = new ArrayList<Color>();
+        mQuantizedColors = new ArrayList<Color>();
 
         for (int i = 0; i < mDivisionsNumber; i++)
             for (int j = 0; j < mDivisionsNumber; j++)
@@ -93,17 +97,21 @@ public class ColorHistogram {
         Collections.sort(boxResult, new ColorBoxReverseComparator());
 
         for (ColorBox colorBox : boxResult) {
-            result.add(new Color(colorBox.red, colorBox.green, colorBox.blue));
+            mQuantizedColors.add(new Color(colorBox.red, colorBox.green, colorBox.blue));
         }
 
-        return result;
+        return this;
     }
 
     public int getDivisionNumber() {
         return mDivisionsNumber;
     }
 
-    public class ColorBox {
+    public ArrayList<Color> getQuantizedColors() {
+        return mQuantizedColors;
+    }
+
+    private class ColorBox {
 
         public ColorBox(int r, int g, int b, int count) {
             red = r;
