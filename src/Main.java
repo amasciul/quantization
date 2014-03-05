@@ -9,19 +9,20 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("strawberry.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File("apple.jpg"));
 
             ColorQuantizer quantizer = new ColorQuantizer().load(bufferedImage).quantize();
 
-            ArrayList<Color> result = quantizer.getQuantizedColors();
+            ArrayList<Integer> result = quantizer.getQuantizedColors();
 
             for (int i = 0; i < 10 && i < result.size(); i++) {
-                Color color = result.get(i);
-                System.out.println("color " + i + " : " + color.getRed() + " " + color.getGreen() + " " + color.getBlue());
+                int color = result.get(i);
+                Color colorObject = new Color(color);
+                System.out.println("color " + i + " : " + colorObject.getRed() + " " + colorObject.getGreen() + " " + colorObject.getBlue());
             }
 
             for (int i = 0; i < 4; i++) {
-                Color max = result.get(i);
+                Color max = new Color(result.get(i));
 
                 JFrame frame = new JFrame();
                 frame.setTitle("color " + i + ", " + quantizer.getDivisionNumber() + " divisions");

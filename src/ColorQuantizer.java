@@ -10,7 +10,7 @@ public class ColorQuantizer {
 
     private ArrayList<Integer>[][][] mHistogram;
     private int mDivisionsNumber;
-    private ArrayList<Color> mQuantizedColors;
+    private ArrayList<Integer> mQuantizedColors;
 
     public ColorQuantizer(int divisions) {
         mDivisionsNumber = divisions;
@@ -54,7 +54,7 @@ public class ColorQuantizer {
 
     public ColorQuantizer quantize() {
         ArrayList<ColorBox> boxResult = new ArrayList<ColorBox>();
-        mQuantizedColors = new ArrayList<Color>();
+        mQuantizedColors = new ArrayList<Integer>();
 
         for (int i = 0; i < mDivisionsNumber; i++)
             for (int j = 0; j < mDivisionsNumber; j++)
@@ -97,7 +97,7 @@ public class ColorQuantizer {
         Collections.sort(boxResult, new ColorBoxReverseComparator());
 
         for (ColorBox colorBox : boxResult) {
-            mQuantizedColors.add(new Color(colorBox.red, colorBox.green, colorBox.blue));
+            mQuantizedColors.add(new Color(colorBox.red, colorBox.green, colorBox.blue).getRGB());
         }
 
         return this;
@@ -107,7 +107,7 @@ public class ColorQuantizer {
         return mDivisionsNumber;
     }
 
-    public ArrayList<Color> getQuantizedColors() {
+    public ArrayList<Integer> getQuantizedColors() {
         return mQuantizedColors;
     }
 
