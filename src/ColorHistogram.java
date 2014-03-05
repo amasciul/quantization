@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class ColorHistogram {
     private static final int DEFAULT_DIVISONS_NUMBER = 2;
 
-    private ArrayList<Color>[][][] mHistogram;
+    private ArrayList<Integer>[][][] mHistogram;
     private int mDivisionsNumber;
 
     public ColorHistogram(BufferedImage image, int divisions) {
@@ -17,7 +17,7 @@ public class ColorHistogram {
         for (int i = 0; i < divisions; i++)
             for (int j = 0; j < divisions; j++)
                 for (int k = 0; k < divisions; k++) {
-                    mHistogram[i][j][k] = new ArrayList<Color>();
+                    mHistogram[i][j][k] = new ArrayList<Integer>();
                 }
 
         int[] imagePixels = convertToTable(image);
@@ -32,9 +32,9 @@ public class ColorHistogram {
     }
 
     private void addPixel(int color) {
-        Color colorObject = new Color(color);
         int divisionLength = 256 / mDivisionsNumber;
-        mHistogram[colorObject.getRed() / divisionLength][colorObject.getGreen() / divisionLength][colorObject.getBlue() / divisionLength].add(colorObject);
+        Color colorObject = new Color(color);
+        mHistogram[colorObject.getRed() / divisionLength][colorObject.getGreen() / divisionLength][colorObject.getBlue() / divisionLength].add(color);
     }
 
     public String toString() {
@@ -57,29 +57,35 @@ public class ColorHistogram {
                 for (int k = 0; k < mDivisionsNumber; k++) {
                     if (mHistogram[i][j][k].size() == 0) break;
 
-                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Integer>() {
                         @Override
-                        public int compare(Color a, Color b) {
-                            return ((Integer)a.getRed()).compareTo(b.getRed());
+                        public int compare(Integer a, Integer b) {
+                            Color colorA = new Color(a);
+                            Color colorB = new Color(b);
+                            return ((Integer)colorA.getRed()).compareTo(colorB.getRed());
                         }
                     });
+                    int redMedian = new Color(mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2)).getRed();
 
-                    int redMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getRed();
-                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Integer>() {
                         @Override
-                        public int compare(Color a, Color b) {
-                            return ((Integer)a.getGreen()).compareTo(b.getGreen());
+                        public int compare(Integer a, Integer b) {
+                            Color colorA = new Color(a);
+                            Color colorB = new Color(b);
+                            return ((Integer)colorA.getGreen()).compareTo(colorB.getGreen());
                         }
                     });
+                    int greenMedian = new Color(mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2)).getGreen();
 
-                    int greenMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getGreen();
-                    Collections.sort(mHistogram[i][j][k], new Comparator<Color>() {
+                    Collections.sort(mHistogram[i][j][k], new Comparator<Integer>() {
                         @Override
-                        public int compare(Color a, Color b) {
-                            return ((Integer)a.getBlue()).compareTo(b.getBlue());
+                        public int compare(Integer a, Integer b) {
+                            Color colorA = new Color(a);
+                            Color colorB = new Color(b);
+                            return ((Integer)colorA.getBlue()).compareTo(colorB.getBlue());
                         }
                     });
-                    int blueMedian = mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2).getBlue();
+                    int blueMedian = new Color(mHistogram[i][j][k].get(mHistogram[i][j][k].size() / 2)).getBlue();
 
                     boxResult.add(new ColorBox(redMedian, greenMedian, blueMedian, mHistogram[i][j][k].size()));
                 }
