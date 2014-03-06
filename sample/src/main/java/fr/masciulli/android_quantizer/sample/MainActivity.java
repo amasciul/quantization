@@ -26,7 +26,9 @@ public class MainActivity extends ActionBarActivity {
     private SpinnerAdapter mSpinnerAdapter;
     private int[] mImageResources = new int[]{
             R.drawable.cupcake,
-            R.drawable.strawberry
+            R.drawable.strawberry,
+            R.drawable.parrot,
+            R.drawable.oranges
     };
 
     private ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
@@ -46,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
         mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
                 R.layout.simple_spinner_dropdown_item);
-        
+
         getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
 
         mImageView = (ImageView)findViewById(R.id.image);
