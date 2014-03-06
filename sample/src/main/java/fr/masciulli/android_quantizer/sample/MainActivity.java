@@ -24,8 +24,8 @@ public class MainActivity extends ActionBarActivity {
         options.inSampleSize = 16;
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample, options);
-        ColorQuantizer quantizer = new ColorQuantizer();
-        ArrayList<Integer> quantizedColors = quantizer.load(bitmap).quantize().getQuantizedColors();
+        
+        ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmap).quantize().getQuantizedColors();
         for (int color : quantizedColors) {
             Log.d("quantizer ", Color.red(color) + " " + Color.green(color) + " " + Color.blue(color));
         }
