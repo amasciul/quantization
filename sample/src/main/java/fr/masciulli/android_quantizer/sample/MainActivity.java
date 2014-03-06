@@ -20,7 +20,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 16;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample, options);
         ColorQuantizer quantizer = new ColorQuantizer();
         ArrayList<Integer> quantizedColors = quantizer.load(bitmap).quantize().getQuantizedColors();
         for (int color : quantizedColors) {
