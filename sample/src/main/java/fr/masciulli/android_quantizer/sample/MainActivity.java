@@ -8,12 +8,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 import fr.masciulli.android_quantizer.lib.ColorQuantizer;
 
 public class MainActivity extends ActionBarActivity {
+
+    private ImageView mImageView;
+    private View mView1;
+    private View mView2;
+    private View mView3;
+    private View mView4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +31,23 @@ public class MainActivity extends ActionBarActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 16;
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample, options);
-        
-        ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmap).quantize().getQuantizedColors();
-        for (int color : quantizedColors) {
-            Log.d("quantizer ", Color.red(color) + " " + Color.green(color) + " " + Color.blue(color));
-        }
+        mImageView = (ImageView)findViewById(R.id.image);
+        mView1 = findViewById(R.id.view1);
+        mView2 = findViewById(R.id.view2);
+        mView3 = findViewById(R.id.view3);
+        mView4 = findViewById(R.id.view4);
+
+        mImageView.setImageDrawable(getResources().getDrawable(R.drawable.sample));
+
+        Bitmap bitmapToQuantize = BitmapFactory.decodeResource(getResources(), R.drawable.sample, options);
+
+        ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmapToQuantize).quantize().getQuantizedColors();
+
+        mView1.setBackgroundColor(quantizedColors.get(0));
+        mView2.setBackgroundColor(quantizedColors.get(1));
+        mView3.setBackgroundColor(quantizedColors.get(2));
+        mView4.setBackgroundColor(quantizedColors.get(3));
+
     }
 
 
