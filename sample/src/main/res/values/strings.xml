@@ -4,5 +4,9 @@
     <string name="app_name">android-quantizer</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string-array name="action_list">
+        <item>Cupcake</item>
+        <item>Strawberry</item>
+    </string-array>
 
 </resources>
