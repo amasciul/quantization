@@ -59,12 +59,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void load(int resource) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 16;
 
         mImageView.setImageDrawable(getResources().getDrawable(resource));
 
+        // Step 1 : create a Bitmap from a resource or anything else as usual
+        // You can downsample it using BitmapFactory.Options it so that the quantization process is quicker
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 16;
+
         Bitmap bitmapToQuantize = BitmapFactory.decodeResource(getResources(), resource, options);
+
+        // Step 2 : create a ColorQuantizer. Give it your bitmap using the load() method, and launch quantization using quantize().
+        // Finally, retrieve quantize colors.
 
         ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmapToQuantize).quantize().getQuantizedColors();
 
