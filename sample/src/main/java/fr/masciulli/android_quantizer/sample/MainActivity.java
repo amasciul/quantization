@@ -2,11 +2,10 @@ package fr.masciulli.android_quantizer.sample;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -34,7 +33,9 @@ public class MainActivity extends ActionBarActivity {
     private ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
         @Override
         public boolean onNavigationItemSelected(int index, long itemId) {
-            load(mImageResources[index]);
+            int resource = mImageResources[index];
+            mImageView.setImageDrawable(getResources().getDrawable(resource));
+            new QuantizeBitmapTask().execute(resource);
             return true;
         }
     };
@@ -58,27 +59,37 @@ public class MainActivity extends ActionBarActivity {
         mView4 = findViewById(R.id.view4);
     }
 
-    private void load(int resource) {
+    private class QuantizeBitmapTask extends AsyncTask<Integer, Void, ArrayList<Integer>> {
 
-        mImageView.setImageDrawable(getResources().getDrawable(resource));
+        // Never perform quantization on the main thread
 
-        // Step 1 : create a Bitmap from a resource or anything else as usual
-        // You can downsample it using BitmapFactory.Options it so that the quantization process is quicker
+        @Override
+        protected ArrayList<Integer> doInBackground(Integer... resources) {
+            int resource = resources[0];
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 16;
+            // Step 1 : create a Bitmap from a resource or anything else as usual
+            // You can downsample it using BitmapFactory.Options it so that the quantization process is quicker
 
-        Bitmap bitmapToQuantize = BitmapFactory.decodeResource(getResources(), resource, options);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 16;
 
-        // Step 2 : create a ColorQuantizer. Give it your bitmap using the load() method, and launch quantization using quantize().
-        // Finally, retrieve quantize colors.
+            Bitmap bitmapToQuantize = BitmapFactory.decodeResource(getResources(), resource, options);
 
-        ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmapToQuantize).quantize().getQuantizedColors();
+            // Step 2 : create a ColorQuantizer. Give it your bitmap using the load() method, and launch quantization using quantize().
+            // Finally, retrieve quantize colors.
 
-        mView1.setBackgroundColor(quantizedColors.get(0));
-        mView2.setBackgroundColor(quantizedColors.get(1));
-        mView3.setBackgroundColor(quantizedColors.get(2));
-        mView4.setBackgroundColor(quantizedColors.get(3));
+            ArrayList<Integer> quantizedColors = new ColorQuantizer().load(bitmapToQuantize).quantize().getQuantizedColors();
+
+            return quantizedColors;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Integer> quantizedColors) {
+            mView1.setBackgroundColor(quantizedColors.get(0));
+            mView2.setBackgroundColor(quantizedColors.get(1));
+            mView3.setBackgroundColor(quantizedColors.get(2));
+            mView4.setBackgroundColor(quantizedColors.get(3));
+        }
     }
 
 }
