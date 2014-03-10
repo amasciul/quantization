@@ -10,10 +10,18 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    release {
-        runProguard false
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+    buildTypes {
+        debug {
+        }
+        release {
+        }
     }
+    signingConfigs {
+        debug {
+        }
+    }
+
 }
 
 dependencies {
